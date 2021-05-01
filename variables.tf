@@ -1,7 +1,6 @@
 # Local Custom Variables
 locals {
-  fqdns_domain    = "${var.dns_entry}.${var.aws_hosted_domain}"
-  app_name        = var.name != "" ? var.name : var.dns_entry
+  app_name        = var.name != "" ? var.name : "idontknow"
   suffix          = var.environment != "" ? var.environment : var.aws_region
   cannonical_name = join("-", [local.app_name, local.suffix])
   config_prefix   = var.config_prefix != "" ? var.config_prefix : local.app_name
@@ -30,10 +29,6 @@ variable "aws_instance_web_port" {
 variable "aws_instance_web_protocol" {
   description = "Define which protocol should be mapped from the ALB to target instance."
   default     = "HTTP"
-}
-
-variable "aws_hosted_domain" {
-  description = "AWS Route 53 hosted zone domain. e.g. my.domain.com"
 }
 
 variable "aws_vpc_id" {
@@ -108,10 +103,6 @@ variable "aws_asg_instances_max" {
 variable "ssh_public_key_ssm_name" {
   description = "The SSM Parameter name containing the SSH public key to log into the EC2 instances. Optional."
   default     = ""
-}
-
-variable "dns_entry" {
-  description = "The Register A DNS entry that will be created for your service. It will be used as suffix for your 'aws_hosted_domain'"
 }
 
 variable "name" {

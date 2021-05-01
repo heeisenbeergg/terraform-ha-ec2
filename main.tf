@@ -27,11 +27,3 @@ output "aws_iam_role_arn" {
 output "aws_iam_role_name" {
   value = aws_iam_role.default.name
 }
-
-output "aws_route53_record" {
-  value = aws_route53_record.default.name
-}
-
-output "aws_alb_listener_https" {
-  value = aws_alb_listener.https.arn
-}

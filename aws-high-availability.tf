@@ -19,25 +19,10 @@ resource "aws_alb_listener" "http" {
     type = "redirect"
 
     redirect {
-      port        = aws_alb_listener.https.port
-      protocol    = aws_alb_listener.https.protocol
+      port        = var.aws_instance_web_port
+      protocol    = var.aws_instance_web_protocol
       status_code = "HTTP_301"
     }
-  }
-}
-
-resource "aws_alb_listener" "https" {
-  load_balancer_arn = aws_alb.default.arn
-
-  port       = 443
-  protocol   = "HTTPS"
-  ssl_policy = "ELBSecurityPolicy-2016-08"
-
-  certificate_arn = data.aws_acm_certificate.wildcard.arn
-
-  default_action {
-    type             = "forward"
-    target_group_arn = aws_alb_target_group.default.arn
   }
 }
 
