@@ -112,6 +112,7 @@ locals {
           "elasticloadbalancing:RegisterTargets",
           "elasticloadbalancing:DeregisterTargets",
           "s3:GetObject",
+          var.iam_polices
         ]
         "Resource" = "*"
       },
