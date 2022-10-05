@@ -134,6 +134,6 @@ variable "environment" {
   default     = ""
 }
 
-variable "iam_polices" {
-  description = "Set new IAM polices"
+variable "iam_statement_polices" {
+  description = "Set new statement polices array"
 }

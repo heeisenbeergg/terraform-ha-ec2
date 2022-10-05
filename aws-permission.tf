@@ -34,6 +34,70 @@ resource "aws_iam_role_policy_attachment" "default" {
 }
 
 locals {
+  statement = [
+    {
+      "Effect" = "Allow"
+      "Action" = [
+        "ec2:DescribeTags",
+        "logs:*",
+        "cloudwatch:PutMetric*",
+        "ssm:DescribeParameters",
+        "ssm:GetParameters",
+        "ssm:GetParametersByPath",
+        "ssm:UpdateInstanceInformation",
+      ]
+      "Resource" = "*"
+    },
+    {
+      "Effect" = "Allow"
+      "Action" = [
+        "autoscaling:CompleteLifecycleAction",
+        "autoscaling:DeleteLifecycleHook",
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeLifecycleHooks",
+        "autoscaling:PutLifecycleHook",
+        "autoscaling:RecordLifecycleActionHeartbeat",
+        "autoscaling:CreateAutoScalingGroup",
+        "autoscaling:UpdateAutoScalingGroup",
+        "autoscaling:EnableMetricsCollection",
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribePolicies",
+        "autoscaling:DescribeScheduledActions",
+        "autoscaling:DescribeNotificationConfigurations",
+        "autoscaling:DescribeLifecycleHooks",
+        "autoscaling:SuspendProcesses",
+        "autoscaling:ResumeProcesses",
+        "autoscaling:AttachLoadBalancers",
+        "autoscaling:PutScalingPolicy",
+        "autoscaling:PutScheduledUpdateGroupAction",
+        "autoscaling:PutNotificationConfiguration",
+        "autoscaling:PutLifecycleHook",
+        "autoscaling:DescribeScalingActivities",
+        "autoscaling:DeleteAutoScalingGroup",
+        "ec2:DescribeInstances",
+        "ec2:DescribeInstanceStatus",
+        "ec2:TerminateInstances",
+        "tag:GetTags",
+        "tag:GetResources",
+        "sns:Publish",
+        "cloudwatch:DescribeAlarms",
+        "cloudwatch:PutMetricAlarm",
+        "elasticloadbalancing:DescribeLoadBalancers",
+        "elasticloadbalancing:DescribeInstanceHealth",
+        "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+        "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+        "elasticloadbalancing:DescribeTargetGroups",
+        "elasticloadbalancing:DescribeTargetHealth",
+        "elasticloadbalancing:RegisterTargets",
+        "elasticloadbalancing:DeregisterTargets",
+        "s3:GetObject",
+      ]
+      "Resource" = "*"
+    },
+  ]
+}
+
+locals {
   # IAM Role
   iam_role = {
     "Version" = "2012-10-17"
@@ -55,67 +119,6 @@ locals {
   # IAM Policy
   iam_policy = {
     Version = "2012-10-17"
-    Statement = [
-      {
-        "Effect" = "Allow"
-        "Action" = [
-          "ec2:DescribeTags",
-          "logs:*",
-          "cloudwatch:PutMetric*",
-          "ssm:DescribeParameters",
-          "ssm:GetParameters",
-          "ssm:GetParametersByPath",
-          "ssm:UpdateInstanceInformation",
-        ]
-        "Resource" = "*"
-      },
-      {
-        "Effect" = "Allow"
-        "Action" = [
-          "autoscaling:CompleteLifecycleAction",
-          "autoscaling:DeleteLifecycleHook",
-          "autoscaling:DescribeAutoScalingGroups",
-          "autoscaling:DescribeLifecycleHooks",
-          "autoscaling:PutLifecycleHook",
-          "autoscaling:RecordLifecycleActionHeartbeat",
-          "autoscaling:CreateAutoScalingGroup",
-          "autoscaling:UpdateAutoScalingGroup",
-          "autoscaling:EnableMetricsCollection",
-          "autoscaling:DescribeAutoScalingGroups",
-          "autoscaling:DescribePolicies",
-          "autoscaling:DescribeScheduledActions",
-          "autoscaling:DescribeNotificationConfigurations",
-          "autoscaling:DescribeLifecycleHooks",
-          "autoscaling:SuspendProcesses",
-          "autoscaling:ResumeProcesses",
-          "autoscaling:AttachLoadBalancers",
-          "autoscaling:PutScalingPolicy",
-          "autoscaling:PutScheduledUpdateGroupAction",
-          "autoscaling:PutNotificationConfiguration",
-          "autoscaling:PutLifecycleHook",
-          "autoscaling:DescribeScalingActivities",
-          "autoscaling:DeleteAutoScalingGroup",
-          "ec2:DescribeInstances",
-          "ec2:DescribeInstanceStatus",
-          "ec2:TerminateInstances",
-          "tag:GetTags",
-          "tag:GetResources",
-          "sns:Publish",
-          "cloudwatch:DescribeAlarms",
-          "cloudwatch:PutMetricAlarm",
-          "elasticloadbalancing:DescribeLoadBalancers",
-          "elasticloadbalancing:DescribeInstanceHealth",
-          "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-          "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-          "elasticloadbalancing:DescribeTargetGroups",
-          "elasticloadbalancing:DescribeTargetHealth",
-          "elasticloadbalancing:RegisterTargets",
-          "elasticloadbalancing:DeregisterTargets",
-          "s3:GetObject",
-          var.iam_polices
-        ]
-        "Resource" = "*"
-      },
-    ]
+    Statement = concat(local.statement, var.iam_statement_polices)
   }
 }
