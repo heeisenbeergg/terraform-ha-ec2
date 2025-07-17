@@ -31,8 +31,8 @@ resource "aws_alb_listener" "http" {
       type = "redirect"
 
       redirect {
-        port        = aws_alb_listener.https.port
-        protocol    = aws_alb_listener.https.protocol
+        port        = aws_alb_listener.https[0].port
+        protocol    = aws_alb_listener.https[0].protocol
         status_code = "HTTP_301"
       }
     }
