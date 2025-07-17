@@ -4,9 +4,11 @@
 
 data "aws_route53_zone" "domain" {
   name = "${var.aws_hosted_domain}."
+  private_zone = var.aws_lb_is_internal
 }
 
 data "aws_acm_certificate" "wildcard" {
+  count    = var.aws_lb_is_internal ? 0 : 1
   domain   = "*.${var.aws_hosted_domain}"
   statuses = ["ISSUED"]
 }

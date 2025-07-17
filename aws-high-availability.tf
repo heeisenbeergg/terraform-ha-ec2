@@ -15,25 +15,39 @@ resource "aws_alb_listener" "http" {
   port     = 80
   protocol = "HTTP"
 
-  default_action {
-    type = "redirect"
+  dynamic "default_action" {
+    for_each = var.aws_lb_is_internal ? [1] : []
 
-    redirect {
-      port        = aws_alb_listener.https.port
-      protocol    = aws_alb_listener.https.protocol
-      status_code = "HTTP_301"
+    content {
+      type             = "forward"
+      target_group_arn = aws_alb_target_group.default.arn
+    }
+  }
+
+  dynamic "default_action" {
+    for_each = var.aws_lb_is_internal ? [] : [1]
+
+    content {
+      type = "redirect"
+
+      redirect {
+        port        = aws_alb_listener.https.port
+        protocol    = aws_alb_listener.https.protocol
+        status_code = "HTTP_301"
+      }
     }
   }
 }
 
 resource "aws_alb_listener" "https" {
+  count    = var.aws_lb_is_internal ? 0 : 1
   load_balancer_arn = aws_alb.default.arn
 
   port       = 443
   protocol   = "HTTPS"
   ssl_policy = "ELBSecurityPolicy-2016-08"
 
-  certificate_arn = data.aws_acm_certificate.wildcard.arn
+  certificate_arn = data.aws_acm_certificate.wildcard[0].arn
 
   default_action {
     type             = "forward"
