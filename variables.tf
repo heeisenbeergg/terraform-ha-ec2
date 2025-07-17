@@ -133,3 +133,7 @@ variable "environment" {
   description = "An environment deployment identifier."
   default     = ""
 }
+
+variable "iam_statement_polices" {
+  description = "Set new statement polices array"
+}
